@@ -1,3 +1,4 @@
+#main.py
 from fastapi import FastAPI, File, UploadFile, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -5,6 +6,7 @@ from sqlalchemy.orm import Session
 import os
 
 from . import crud, models, schemas, database
+from typing import List
 
 app = FastAPI()
 
@@ -73,6 +75,12 @@ def delete_media_file(file_id: int, db: Session = Depends(get_db)):
     
     crud.delete_media(db=db, media_id=file_id)
     return media
+
+# Endpoint nou pentru actualizarea ordinii imaginilor
+@app.post("/media/reorder")
+def reorder_media(order: List[int], db: Session = Depends(get_db)):
+    crud.update_media_order(db, order)
+    return {"status": "Order updated successfully"}
 
 # Endpoint pentru a obține setările
 @app.get("/settings/", response_model=schemas.Settings)

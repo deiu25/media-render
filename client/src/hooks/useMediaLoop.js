@@ -1,27 +1,32 @@
 // hooks/useMediaLoop.jsx
 import { useState, useEffect } from "react";
 
-export default function useMediaLoop(mediaFiles, playOrder = "asc", intervalTime = 5000) {
+export default function useMediaLoop(mediaFiles, playOrder = "asc", intervalTime = 5) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    // Restart from the first image if the media list changes
+    setCurrentIndex(0);
+  }, [mediaFiles]);
 
   useEffect(() => {
     if (mediaFiles.length === 0 || isPaused) return;
 
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => {
-        if (playOrder === "asc") {
-          return (prevIndex + 1) % mediaFiles.length;
-        } else if (playOrder === "desc") {
-          return (prevIndex - 1 + mediaFiles.length) % mediaFiles.length;
-        } else {
-          return prevIndex; // Custom ordering could be added here
-        }
+        // Calculate next index based on play order
+        const nextIndex =
+          playOrder === "asc"
+            ? (prevIndex + 1) % mediaFiles.length
+            : (prevIndex - 1 + mediaFiles.length) % mediaFiles.length;
+
+        return nextIndex;
       });
     }, intervalTime * 1000);
 
     return () => clearInterval(interval);
-  }, [mediaFiles, isPaused, intervalTime, playOrder]);
+  }, [mediaFiles, isPaused, intervalTime, playOrder, currentIndex]);
 
   return { currentIndex, isPaused, setIsPaused };
 }

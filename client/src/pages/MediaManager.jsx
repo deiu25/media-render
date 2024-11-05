@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { ConfirmToast } from "react-confirm-toast";
-import PaginatedImages from "./PaginatedImages";
+import PaginatedImages from "../components/PaginatedImages";
 import { deleteMediaFile } from "../services/api";
 import useFetchMedia from "../hooks/useMediaFiles";
 
 export default function MediaManager() {
-  const { mediaFiles, setMediaFiles, error } = useFetchMedia();
+  const { mediaFiles, setMediaFiles, error } = useFetchMedia(); 
   const [showConfirm, setShowConfirm] = useState(false);
   const [fileToDelete, setFileToDelete] = useState(null);
 
@@ -27,6 +27,7 @@ export default function MediaManager() {
     if (fileToDelete !== null) {
       handleDelete(fileToDelete);
       setFileToDelete(null);
+      setShowConfirm(false);
     }
   };
 

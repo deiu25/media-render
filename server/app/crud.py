@@ -1,4 +1,6 @@
+# crud.py
 from sqlalchemy.orm import Session
+from typing import List
 from . import models, schemas
 
 def create_media(db: Session, media: schemas.MediaCreate, filepath: str):
@@ -19,7 +21,7 @@ def create_default_settings(db: Session):
     return default_settings
 
 def get_media(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Media).offset(skip).limit(limit).all()
+    return db.query(models.Media).order_by(models.Media.display_order).offset(skip).limit(limit).all()
 
 def get_media_by_id(db: Session, media_id: int):
     return db.query(models.Media).filter(models.Media.id == media_id).first()
@@ -45,3 +47,11 @@ def update_settings(db: Session, settings: schemas.SettingsCreate):
     db.commit()
     db.refresh(db_settings)
     return db_settings
+
+# Funcție pentru a actualiza ordinea fișierelor media
+def update_media_order(db: Session, order: List[int]):
+    for display_order, media_id in enumerate(order):
+        media = db.query(models.Media).filter(models.Media.id == media_id).first()
+        if media:
+            media.display_order = display_order  
+    db.commit()

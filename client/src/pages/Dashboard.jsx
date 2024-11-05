@@ -37,25 +37,41 @@ export default function Dashboard() {
       <main className="p-6 mt-12">
         {location.pathname === "/" && (
           <section className="text-center mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Despre aplicație</h2>
+            <h2 className="text-2xl font-semibold mb-4">
+              About the Application
+            </h2>
             <p className="text-gray-300 mb-4">
-              Aceasta este o aplicație de redare media care permite încărcarea,
-              gestionarea și vizualizarea fișierelor media într-un mod simplu și
-              intuitiv.
+              This is a media playback application that enables uploading,
+              organizing, and viewing media files in an efficient and
+              customizable way, offering an intuitive experience for users.
             </p>
             <ul className="text-gray-400 list-disc list-inside space-y-2">
               <li>
-                <strong>Upload Media</strong>: Încarcă imagini și videoclipuri
-                care pot fi stocate și gestionate în aplicație.
+                <strong>Upload Media</strong>: Upload images and videos directly
+                into the application. Each media file is saved and available for
+                playback and further organization.
               </li>
               <li>
-                <strong>Manage Media</strong>: Vizualizează, șterge sau
-                organizează fișierele media pe care le-ai încărcat.
+                <strong>Organize Media</strong>: Manage and organize media files
+                through an intuitive drag-and-drop interface, allowing you to
+                arrange files in the desired order. You also have options to
+                delete files and modify playback settings.
               </li>
               <li>
-                <strong>View Media</strong>: Redă fișierele media într-o buclă,
-                având opțiuni de pauză și redare pentru o experiență de
-                vizualizare personalizată.
+                <strong>Media Playback</strong>: Play media files in a
+                continuous loop, with pause and play options to control the
+                viewing experience. The application supports a personalized view
+                and a seamless flow of media content.
+              </li>
+            </ul>
+            <h3 className="text-lg font-semibold text-gray-300 mt-6 mb-2">
+              Additional Features
+            </h3>
+            <ul className="text-gray-400 list-disc list-inside space-y-2">
+              <li>
+                <strong>Playback Settings</strong>: Adjust the playback
+                interval, with settings automatically saved for a continuous
+                experience.
               </li>
             </ul>
           </section>

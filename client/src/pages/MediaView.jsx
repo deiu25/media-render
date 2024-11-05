@@ -16,7 +16,7 @@ export default function MediaView() {
 
   return (
     <div className="relative w-full h-screen bg-gray-900 overflow-hidden flex items-center justify-center">
-      {currentMedia.filetype.startsWith("image") ? (
+      {currentMedia?.filetype.startsWith("image") ? (
         <img src={currentMedia.url} alt={`Media ${currentIndex + 1}`} className="w-full h-full object-cover transition-opacity duration-500" />
       ) : (
         <video src={currentMedia.url} autoPlay muted loop className="w-full h-full object-cover transition-opacity duration-500" />

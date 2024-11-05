@@ -1,3 +1,4 @@
+#models
 from sqlalchemy import Column, Integer, String, Float
 from .database import Base
 
@@ -8,6 +9,7 @@ class Media(Base):
     filename = Column(String, index=True)
     filepath = Column(String)
     filetype = Column(String)
+    display_order = Column(Integer, default=0) 
 
 class Settings(Base):
     __tablename__ = "settings"

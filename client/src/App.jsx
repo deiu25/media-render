@@ -1,9 +1,9 @@
 import { Routes, Route } from "react-router-dom";
-import MediaUploader from "./components/MediaUploader";
-import MediaManager from "./components/MediaManager";
+import MediaUploader from "./pages/MediaUploader";
+import MediaManager from "./pages/MediaManager";
 import MediaView from "./pages/MediaView";
 import Dashboard from "./pages/Dashboard";
-import Settings from "./components/Settings";
+import Settings from "./pages/Settings";
 
 function App() {
   return (
@@ -14,7 +14,6 @@ function App() {
         <Route path="/settings" element={<Settings />} />
       </Route>
       <Route path="view" element={<MediaView />} />
-
     </Routes>
   );
 }
