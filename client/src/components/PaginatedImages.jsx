@@ -15,7 +15,7 @@ export default function PaginatedImages({ images, onDelete }) {
   const currentImages = images.slice(offset, offset + imagesPerPage);
 
   return (
-    <div>
+    <>
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
         {currentImages.map((image) => (
           <div
@@ -64,7 +64,7 @@ export default function PaginatedImages({ images, onDelete }) {
         nextClassName="bg-gray-800 text-white px-3 py-1 rounded-lg cursor-pointer"
         breakClassName="text-gray-500 px-3"
       />
-    </div>
+    </>
   );
 }
 

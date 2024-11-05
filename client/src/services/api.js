@@ -16,3 +16,9 @@ export const deleteMediaFile = async (fileId) => {
   });
   if (!response.ok) throw new Error("Error deleting file.");
 };
+
+export async function fetchSettings() {
+  const response = await fetch(`${API_BASE_URL}/settings/`);
+  if (!response.ok) throw new Error("Failed to fetch settings");
+  return response.json();
+}

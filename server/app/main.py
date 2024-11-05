@@ -8,7 +8,6 @@ from . import crud, models, schemas, database
 
 app = FastAPI()
 
-# Configurare CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"], 
@@ -17,8 +16,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Creare structuri baze de date
 models.Base.metadata.create_all(bind=database.engine)
+
+# Asigură că setările implicite sunt create la inițializarea aplicației
+def initialize_settings(db: Session):
+    settings = crud.get_settings(db)
+    if not settings:
+        # Creează setările implicite
+        crud.create_default_settings(db)
+
+# Apelăm funcția de inițializare a setărilor
+with database.SessionLocal() as db:
+    initialize_settings(db)
 
 # Montare fișiere statice
 if not os.path.exists("app/static/media"):
@@ -48,23 +57,32 @@ async def upload_files(
         uploaded_files.append(uploaded_file)
     return uploaded_files
 
-# Endpoint pentru a obține lista fișierelor media
 @app.get("/media/", response_model=list[schemas.Media])
 def get_media_files(db: Session = Depends(get_db)):
     return crud.get_media(db=db)
 
-# Endpoint pentru a șterge un fișier media
 @app.delete("/media/{file_id}", response_model=schemas.Media)
 def delete_media_file(file_id: int, db: Session = Depends(get_db)):
     media = crud.get_media_by_id(db=db, media_id=file_id)
     if not media:
         raise HTTPException(status_code=404, detail="File not found")
     
-    # Șterge fișierul de pe disc
     file_path = f"app/static/media/{media.filename}"
     if os.path.exists(file_path):
         os.remove(file_path)
     
-    # Șterge înregistrarea din baza de date
     crud.delete_media(db=db, media_id=file_id)
     return media
+
+# Endpoint pentru a obține setările
+@app.get("/settings/", response_model=schemas.Settings)
+def get_settings(db: Session = Depends(get_db)):
+    settings = crud.get_settings(db=db)
+    if not settings:
+        raise HTTPException(status_code=404, detail="Settings not found")
+    return settings
+
+# Endpoint pentru a actualiza setările
+@app.put("/settings/", response_model=schemas.Settings)
+def update_settings(settings: schemas.SettingsCreate, db: Session = Depends(get_db)):
+    return crud.update_settings(db=db, settings=settings)

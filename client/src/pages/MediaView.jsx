@@ -1,11 +1,12 @@
+// MediaView.jsx
 import { useNavigate } from "react-router-dom";
 import useFetchMedia from "../hooks/useMediaFiles";
 import useMediaLoop from "../hooks/useMediaLoop";
 import PropTypes from "prop-types";
 
 export default function MediaView() {
-  const { mediaFiles, error } = useFetchMedia();
-  const { currentIndex, isPaused, setIsPaused } = useMediaLoop(mediaFiles);
+  const { mediaFiles, settings, error } = useFetchMedia();
+  const { currentIndex, isPaused, setIsPaused } = useMediaLoop(mediaFiles, settings.play_order, settings.playback_time);
   const navigate = useNavigate();
 
   if (error) return <p className="text-center text-red-500">{error}</p>;

@@ -13,3 +13,16 @@ class Media(MediaBase):
 
     class Config:
         from_attributes = True  
+
+class SettingsBase(BaseModel):
+    play_order: str
+    playback_time: float
+
+class SettingsCreate(SettingsBase):
+    pass
+
+class Settings(SettingsBase):
+    id: int
+
+    class Config:
+        from_attributes = True  

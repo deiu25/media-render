@@ -22,6 +22,11 @@ export default function Dashboard() {
             </Link>
           </li>
           <li>
+            <Link to="settings" className="text-lg hover:text-gray-300">
+              Settings
+            </Link>
+          </li>
+          <li>
             <Link to="view" className="text-lg hover:text-gray-300">
               View Media
             </Link>

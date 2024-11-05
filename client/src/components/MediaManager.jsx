@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { ConfirmToast } from "react-confirm-toast";
 import PaginatedImages from "./PaginatedImages";
-
 import { deleteMediaFile } from "../services/api";
 import useFetchMedia from "../hooks/useMediaFiles";
 
