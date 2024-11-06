@@ -1,11 +1,11 @@
 // components/Settings.jsx
 import { useEffect, useState } from "react";
 import OrderPreview from "../components/OrderPreview";
-import useFetchMedia from "../hooks/useMediaFiles";
+import useMediaManager from "../hooks/useMediaManager";
 import useSettings from "../hooks/useSettings";
 
 export default function Settings() {
-  const { mediaFiles, settings } = useFetchMedia();
+  const { mediaFiles, settings } = useMediaManager();
   const [customOrder, setCustomOrder] = useState(mediaFiles);
 
   // Initialize the custom hook for settings

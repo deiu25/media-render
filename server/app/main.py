@@ -20,18 +20,15 @@ app.add_middleware(
 
 models.Base.metadata.create_all(bind=database.engine)
 
-# Asigură că setările implicite sunt create la inițializarea aplicației
 def initialize_settings(db: Session):
     settings = crud.get_settings(db)
     if not settings:
         # Creează setările implicite
         crud.create_default_settings(db)
 
-# Apelăm funcția de inițializare a setărilor
 with database.SessionLocal() as db:
     initialize_settings(db)
 
-# Montare fișiere statice
 if not os.path.exists("app/static/media"):
     os.makedirs("app/static/media")
 app.mount("/static", StaticFiles(directory="app/static"), name="static")

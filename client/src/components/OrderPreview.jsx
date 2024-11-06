@@ -31,7 +31,7 @@ export default function OrderPreview({ images, onReorder }) {
       {customOrder.map((image, index) => (
         <div
           key={image.id}
-          className="bg-gray-700 p-2 rounded-lg cursor-move"
+          className="relative bg-gray-700 p-2 rounded-lg cursor-move"
           draggable
           onDragStart={() => handleDragStart(index)}
           onDragEnter={() => handleDragEnter(index)}

@@ -11,6 +11,7 @@ class MediaCreate(MediaBase):
 class Media(MediaBase):
     id: int
     filepath: str  
+    display_order: int
 
     class Config:
         from_attributes = True  

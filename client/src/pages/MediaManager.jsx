@@ -1,18 +1,19 @@
+// pages/MediaManager.jsx
 import { useState } from "react";
 import { ConfirmToast } from "react-confirm-toast";
 import PaginatedImages from "../components/PaginatedImages";
-import { deleteMediaFile } from "../services/api";
-import useFetchMedia from "../hooks/useMediaFiles";
+import { deleteMediaFile } from "../services/api"; 
+import useMediaManager from "../hooks/useMediaManager";
 
 export default function MediaManager() {
-  const { mediaFiles, setMediaFiles, error } = useFetchMedia(); 
+  const { mediaFiles, error, refetchMediaFiles } = useMediaManager(); 
   const [showConfirm, setShowConfirm] = useState(false);
   const [fileToDelete, setFileToDelete] = useState(null);
 
   const handleDelete = async (fileId) => {
     try {
-      await deleteMediaFile(fileId);
-      setMediaFiles((prevFiles) => prevFiles.filter((file) => file.id !== fileId));
+      await deleteMediaFile(fileId); 
+      refetchMediaFiles();
     } catch (error) {
       console.error("Error deleting file:", error);
     }

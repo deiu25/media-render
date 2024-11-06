@@ -1,4 +1,4 @@
-// MediaPreview.jsx
+// ./components/MediaPreview.jsx
 import PropTypes from "prop-types";
 
 export default function MediaPreview({ files }) {

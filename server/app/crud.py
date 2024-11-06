@@ -48,7 +48,6 @@ def update_settings(db: Session, settings: schemas.SettingsCreate):
     db.refresh(db_settings)
     return db_settings
 
-# Funcție pentru a actualiza ordinea fișierelor media
 def update_media_order(db: Session, order: List[int]):
     for display_order, media_id in enumerate(order):
         media = db.query(models.Media).filter(models.Media.id == media_id).first()

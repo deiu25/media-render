@@ -29,17 +29,24 @@ export const fetchSettings = async () => {
 
 // Update settings
 export const updateSettings = async (settingsData) => {
-  await apiRequest(getFullUrl("settings/"), {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(settingsData),
-  });
+  try {
+    await apiRequest(getFullUrl("settings/"), {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(settingsData),
+    });
+    return "Settings updated successfully!";
+  } catch (error) {
+    console.error("Failed to update settings:", error);
+    return "Failed to update settings. Please try again.";
+  }
 };
 
 // Upload files
 export const uploadFilesToServer = async (mediaFiles) => {
   const formData = new FormData();
   mediaFiles.forEach((file) => formData.append("files", file));
+
   return await apiRequest(getFullUrl("upload/"), { method: "POST", body: formData });
 };
 

@@ -1,7 +1,8 @@
 // hooks/useSettings.js
 import { useState, useEffect } from "react";
+import { updateSettings } from "../services/api";
 
-export default function useSettings(initialPlaybackTime, settingsUrl) {
+export default function useSettings(initialPlaybackTime) {
   const [playbackTime, setPlaybackTime] = useState(initialPlaybackTime);
   const [statusMessage, setStatusMessage] = useState("");
 
@@ -14,17 +15,8 @@ export default function useSettings(initialPlaybackTime, settingsUrl) {
       play_order: "custom",
       playback_time: parseFloat(playbackTime),
     };
-    try {
-      const response = await fetch(settingsUrl, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(settingsData),
-      });
-      setStatusMessage(response.ok ? "Settings updated successfully!" : "Failed to update settings.");
-    } catch (error) {
-      setStatusMessage("An error occurred while updating settings.");
-      console.error("Error updating settings:", error);
-    }
+    const message = await updateSettings(settingsData);
+    setStatusMessage(message);
   };
 
   return {
