@@ -1,25 +1,33 @@
-// components/OrderPreview.jsx
 import PropTypes from "prop-types";
 import { useRef, useState, useEffect } from "react";
 import ImageComponent from "./LazyLoadImage";
 
 export default function OrderPreview({ images, onReorder }) {
   const [customOrder, setCustomOrder] = useState(images);
-  const dragImageIndex = useRef(null);
-  const draggedOverImageIndex = useRef(null);
+  const dragIndexes = useRef({ dragIndex: null, dragOverIndex: null });
 
   useEffect(() => {
     setCustomOrder(images);
   }, [images]);
 
-  const handleDragStart = (index) => (dragImageIndex.current = index);
-  const handleDragEnter = (index) => (draggedOverImageIndex.current = index);
+  const handleDragStart = (index) => {
+    dragIndexes.current.dragIndex = index;
+  };
+
+  const handleDragEnter = (index) => {
+    dragIndexes.current.dragOverIndex = index;
+  };
+
   const handleDragEnd = () => {
-    const updatedOrder = [...customOrder];
-    const [movedImage] = updatedOrder.splice(dragImageIndex.current, 1);
-    updatedOrder.splice(draggedOverImageIndex.current, 0, movedImage);
-    setCustomOrder(updatedOrder);
-    onReorder(updatedOrder);
+    const { dragIndex, dragOverIndex } = dragIndexes.current;
+    if (dragIndex !== dragOverIndex) {
+      const updatedOrder = [...customOrder];
+      const [movedImage] = updatedOrder.splice(dragIndex, 1);
+      updatedOrder.splice(dragOverIndex, 0, movedImage);
+      setCustomOrder(updatedOrder);
+      onReorder(updatedOrder);
+    }
+    dragIndexes.current = { dragIndex: null, dragOverIndex: null };
   };
 
   if (!customOrder.length) {

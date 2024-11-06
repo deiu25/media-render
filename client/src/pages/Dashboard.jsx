@@ -80,7 +80,15 @@ export default function Dashboard() {
       </main>
 
       <footer className="p-4 text-center text-gray-500">
-        © {new Date().getFullYear()} Media Loop Application
+        © {new Date().getFullYear()} Media Loop Application. Created by
+        <a
+          href="https://andrei-design.ro"
+          className="text-blue-500 hover:underline ml-1"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          andrei-design
+        </a>.
       </footer>
     </div>
   );

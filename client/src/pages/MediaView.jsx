@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import useMediaManager from "../hooks/useMediaManager";
 
 export default function MediaView() {
-  const { mediaFiles, currentIndex, isPaused, setIsPaused, error } =
-    useMediaManager();
+  const { mediaFiles, currentIndex, isPaused, setIsPaused, error } = useMediaManager();
   const navigate = useNavigate();
 
   if (error) return <p className="text-center text-red-500">{error}</p>;

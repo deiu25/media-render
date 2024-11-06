@@ -2,33 +2,28 @@
 import { useState } from "react";
 import { ConfirmToast } from "react-confirm-toast";
 import PaginatedImages from "../components/PaginatedImages";
-import { deleteMediaFile } from "../services/api"; 
+import { deleteMediaFile } from "../services/api";
 import useMediaManager from "../hooks/useMediaManager";
 
 export default function MediaManager() {
-  const { mediaFiles, error, refetchMediaFiles } = useMediaManager(); 
-  const [showConfirm, setShowConfirm] = useState(false);
-  const [fileToDelete, setFileToDelete] = useState(null);
+  const { mediaFiles, error, refetchMediaFiles } = useMediaManager();
+  const [confirmState, setConfirmState] = useState({ show: false, fileId: null });
 
   const handleDelete = async (fileId) => {
     try {
-      await deleteMediaFile(fileId); 
+      await deleteMediaFile(fileId);
       refetchMediaFiles();
     } catch (error) {
       console.error("Error deleting file:", error);
     }
   };
 
-  const confirmDelete = (fileId) => {
-    setFileToDelete(fileId);
-    setShowConfirm(true);
-  };
+  const confirmDelete = (fileId) => setConfirmState({ show: true, fileId });
 
   const executeDelete = () => {
-    if (fileToDelete !== null) {
-      handleDelete(fileToDelete);
-      setFileToDelete(null);
-      setShowConfirm(false);
+    if (confirmState.fileId !== null) {
+      handleDelete(confirmState.fileId);
+      setConfirmState({ show: false, fileId: null });
     }
   };
 
@@ -44,17 +39,15 @@ export default function MediaManager() {
         <p className="text-center text-gray-400">There are no media files uploaded.</p>
       )}
 
-      {showConfirm && (
-        <ConfirmToast
-          showConfirmToast={showConfirm}
-          setShowConfirmToast={setShowConfirm}
-          customFunction={executeDelete}
-          toastText="Are you sure you want to delete this file?"
-          buttonYesText="Yes"
-          buttonNoText="No"
-          asModal={true}
-        />
-      )}
+      <ConfirmToast
+        showConfirmToast={confirmState.show}
+        setShowConfirmToast={(show) => setConfirmState((prev) => ({ ...prev, show }))}
+        customFunction={executeDelete}
+        toastText="Are you sure you want to delete this file?"
+        buttonYesText="Yes"
+        buttonNoText="No"
+        asModal
+      />
     </div>
   );
 }

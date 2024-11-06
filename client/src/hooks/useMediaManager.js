@@ -1,61 +1,50 @@
 // hooks/useMediaManager.js
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import * as api from "../services/api";
 
 export default function useMediaManager() {
-  const [mediaFiles, setMediaFiles] = useState([]);
-  const [settings, setSettings] = useState({ play_order: "custom", playback_time: 5.0 });
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const [error, setError] = useState(null);
+  const [state, setState] = useState({
+    mediaFiles: [],
+    settings: { play_order: "custom", playback_time: 5.0 },
+    currentIndex: 0,
+    isPaused: false,
+    error: null,
+  });
 
-  // Fetch media files and settings on mount
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const files = await api.fetchMediaFiles();
-        const settingsData = await api.fetchSettings();
-        setSettings(settingsData);
-
-        const sortedFiles = files.sort((a, b) => a.display_order - b.display_order);
-        setMediaFiles(sortedFiles);
-      } catch (err) {
-        setError(err.message);
-      }
-    };
-
-    fetchData();
+  const fetchMediaData = useCallback(async () => {
+    try {
+      const [files, settingsData] = await Promise.all([api.fetchMediaFiles(), api.fetchSettings()]);
+      setState((prev) => ({
+        ...prev,
+        mediaFiles: files.sort((a, b) => a.display_order - b.display_order),
+        settings: settingsData,
+      }));
+    } catch (err) {
+      setState((prev) => ({ ...prev, error: err.message }));
+    }
   }, []);
 
-  // Handle playback loop based on settings
   useEffect(() => {
-    if (mediaFiles.length === 0 || isPaused) return;
+    fetchMediaData();
+  }, [fetchMediaData]);
 
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => {
-        return (prevIndex + 1) % mediaFiles.length;
-      });
-    }, settings.playback_time * 1000);
+  useEffect(() => {
+    if (state.mediaFiles.length === 0 || state.isPaused) return;
 
-    return () => clearInterval(interval);
-  }, [mediaFiles, isPaused, settings.playback_time]);
+    const intervalId = setInterval(() => {
+      setState((prev) => ({
+        ...prev,
+        currentIndex: (prev.currentIndex + 1) % prev.mediaFiles.length,
+      }));
+    }, state.settings.playback_time * 1000);
 
+    return () => clearInterval(intervalId);
+  }, [state.mediaFiles, state.isPaused, state.settings.playback_time]);
 
   return {
-    mediaFiles,
-    currentIndex,
-    isPaused,
-    setIsPaused,
-    settings,
-    setSettings,
-    error,
-    refetchMediaFiles: async () => {
-      try {
-        const files = await api.fetchMediaFiles();
-        setMediaFiles(files.sort((a, b) => a.display_order - b.display_order));
-      } catch (err) {
-        setError(err.message);
-      }
-    },
+    ...state,
+    setIsPaused: (isPaused) => setState((prev) => ({ ...prev, isPaused })),
+    setSettings: (settings) => setState((prev) => ({ ...prev, settings })),
+    refetchMediaFiles: fetchMediaData,
   };
 }

@@ -3,30 +3,27 @@ import { useEffect, useState } from "react";
 import OrderPreview from "../components/OrderPreview";
 import useMediaManager from "../hooks/useMediaManager";
 import useSettings from "../hooks/useSettings";
+import { reorderMediaFiles } from "../services/api";
 
 export default function Settings() {
   const { mediaFiles, settings } = useMediaManager();
   const [customOrder, setCustomOrder] = useState(mediaFiles);
 
-  // Initialize the custom hook for settings
   const { playbackTime, setPlaybackTime, saveSettings, statusMessage } = useSettings(
-    settings.playback_time,
-    "http://127.0.0.1:8000/settings/"
+    settings.playback_time
   );
 
   useEffect(() => {
     setCustomOrder(mediaFiles);
   }, [mediaFiles]);
 
-  const handleReorder = (newOrder) => {
+  const handleReorder = async (newOrder) => {
     setCustomOrder(newOrder);
-    fetch("http://127.0.0.1:8000/media/reorder", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newOrder.map((image) => image.id)),
-    });
+    try {
+      await reorderMediaFiles(newOrder);
+    } catch (error) {
+      console.error("Error reordering media files:", error);
+    }
   };
 
   return (
@@ -40,7 +37,7 @@ export default function Settings() {
           min="1"
           step="0.5"
           value={playbackTime}
-          onChange={(e) => setPlaybackTime(e.target.value)}
+          onChange={(e) => setPlaybackTime(Number(e.target.value))}
           className="w-[20%] px-3 py-2 bg-gray-700 text-white rounded-lg text-center"
         />
 

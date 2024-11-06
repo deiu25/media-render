@@ -1,27 +1,28 @@
-// FileUploader.jsx
 import PropTypes from "prop-types";
 import { useState } from "react";
 
 export default function FileUploader({ onFileSelect, fileInputRef }) {
   const [isDragging, setIsDragging] = useState(false);
 
-  const handleDragOver = (e) => {
+  const handleDrag = (e, isDragOver) => {
     e.preventDefault();
-    setIsDragging(true);
+    setIsDragging(isDragOver);
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
-    onFileSelect(e.dataTransfer.files);
     setIsDragging(false);
+    onFileSelect(e.dataTransfer.files);
   };
+
+  const handleFileClick = () => fileInputRef.current.click();
 
   return (
     <div
-      onClick={() => fileInputRef.current.click()}
+      onClick={handleFileClick}
       onDrop={handleDrop}
-      onDragOver={handleDragOver}
-      onDragLeave={() => setIsDragging(false)}
+      onDragOver={(e) => handleDrag(e, true)}
+      onDragLeave={(e) => handleDrag(e, false)}
       className={`w-full flex flex-col items-center p-4 border-2 rounded-lg cursor-pointer ${
         isDragging ? "border-blue-500 bg-blue-200" : "border-dashed border-gray-500"
       }`}
@@ -41,5 +42,7 @@ export default function FileUploader({ onFileSelect, fileInputRef }) {
 
 FileUploader.propTypes = {
   onFileSelect: PropTypes.func.isRequired,
-  fileInputRef: PropTypes.object.isRequired,
+  fileInputRef: PropTypes.shape({
+    current: PropTypes.instanceOf(Element),
+  }).isRequired,
 };
