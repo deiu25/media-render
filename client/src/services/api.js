@@ -36,7 +36,7 @@ export const uploadFilesToServer = (mediaFiles) => {
   const formData = new FormData();
   mediaFiles.forEach((file) => formData.append("files", file));
 
-  return apiRequest(getFullUrl("upload/"), { method: "POST", body: formData });
+  return apiRequest(getFullUrl("media/upload/"), { method: "POST", body: formData });
 };
 
 // Delete a single media file
